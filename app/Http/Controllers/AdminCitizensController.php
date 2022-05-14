@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Citizen;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 
 class AdminCitizensController extends Controller
@@ -14,6 +16,8 @@ class AdminCitizensController extends Controller
     public function index()
     {
         //
+        $citizen = Citizen::all();
+        return view("admin.lgas.index", compact('citizen'));
     }
 
     /**
@@ -24,6 +28,7 @@ class AdminCitizensController extends Controller
     public function create()
     {
         //
+        return view('admin.citizens.create');
     }
 
     /**
@@ -35,6 +40,9 @@ class AdminCitizensController extends Controller
     public function store(Request $request)
     {
         //
+        $wards = Ward::pluck('name', 'id')->all(); 
+
+        Citizen::create($request->all(), compact('wards'));
     }
 
     /**
@@ -57,6 +65,9 @@ class AdminCitizensController extends Controller
     public function edit($id)
     {
         //
+        $citizen = Citizen::findOrFail($id);
+        $ward = Ward::pluck('name', 'id')->all(); 
+        return view('admin.users.edit', compact('citizen', 'ward'));
     }
 
     /**
