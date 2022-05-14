@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lga;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class AdminLgasController extends Controller
@@ -14,6 +16,8 @@ class AdminLgasController extends Controller
     public function index()
     {
         //
+        $lgas = Lga::all();
+        return view("admin.lgas.index", compact('lgas'));
     }
 
     /**
@@ -24,6 +28,7 @@ class AdminLgasController extends Controller
     public function create()
     {
         //
+        return view('admin.lgas.create');
     }
 
     /**
@@ -35,6 +40,9 @@ class AdminLgasController extends Controller
     public function store(Request $request)
     {
         //
+        $states = State::pluck('name', 'id')->all(); 
+
+        Lga::create($request->all(), compact('states'));
     }
 
     /**
@@ -57,6 +65,9 @@ class AdminLgasController extends Controller
     public function edit($id)
     {
         //
+        $lga = Lga::findOrFail($id);
+        $states = State::pluck('name', 'id')->all(); 
+        return view('admin.users.edit', compact('lga', 'states'));
     }
 
     /**
@@ -69,6 +80,12 @@ class AdminLgasController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $lga = Lga::findOrFail($id);
+
+        $lga->update($request->all());
+
+        return redirect("/admin/lgas");
     }
 
     /**
@@ -80,5 +97,8 @@ class AdminLgasController extends Controller
     public function destroy($id)
     {
         //
+        $lga = Lga::findOrFail($id);
+        $lga->delete();
+        return redirect("/admin/lgas");
     }
 }

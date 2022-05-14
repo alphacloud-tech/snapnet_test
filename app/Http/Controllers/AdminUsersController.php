@@ -41,7 +41,6 @@ class AdminUsersController extends Controller
     {
         //
 
-        return $request->all(); // for testing
 
         User::create($request->all());
     }
@@ -81,6 +80,11 @@ class AdminUsersController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = User::findOrFail($id);
+
+        $user->update($request->all());
+
+        return redirect("/admin/users");
     }
 
     /**
@@ -92,5 +96,9 @@ class AdminUsersController extends Controller
     public function destroy($id)
     {
         //
+
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect("/admin/users");
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\State;
+use App\Models\Lga;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 
-class AdminStatesController extends Controller
+class AdminWardsCOntroller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class AdminStatesController extends Controller
     public function index()
     {
         //
-        $states = State::all();
-        return view('admin.users.edit', compact('states'));
+        $wards = Ward::all();
+        return view("admin.wards.index", compact('wards'));
     }
 
     /**
@@ -27,7 +28,7 @@ class AdminStatesController extends Controller
     public function create()
     {
         //
-        return view('admin.states.create');
+        return view('admin.wards.create');
     }
 
     /**
@@ -39,7 +40,10 @@ class AdminStatesController extends Controller
     public function store(Request $request)
     {
         //
-        State::create($request->all());
+
+        $lgas = Lga::pluck('name', 'id')->all(); 
+
+        Lga::create($request->all(), compact('lgas'));
     }
 
     /**
@@ -62,8 +66,9 @@ class AdminStatesController extends Controller
     public function edit($id)
     {
         //
-        $state = State::findOrFail($id);
-        return view('admin.users.edit', compact('state'));
+        $ward = Ward::findOrFail($id);
+        $lgas = Lga::pluck('name', 'id')->all(); 
+        return view('admin.wards.edit', compact('ward', 'lgas'));
     }
 
     /**
@@ -76,11 +81,11 @@ class AdminStatesController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $state = State::findOrFail($id);
+        $ward = Ward::findOrFail($id);
 
-        $state->update($request->all());
+        $ward->update($request->all());
 
-        return redirect("/admin/states");
+        return redirect("/admin/wards");
     }
 
     /**
@@ -92,9 +97,8 @@ class AdminStatesController extends Controller
     public function destroy($id)
     {
         //
-
-        $state = User::findOrFail($id);
-        $state->delete();
-        return redirect("/admin/states");
+        $ward = Ward::findOrFail($id);
+        $ward->delete();
+        return redirect("/admin/wards");
     }
 }
